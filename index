@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Анатомическое погружение — дыхательная система</title>
+<style>
+:root{--bg:#eef5fb;--card:#fff;--ink:#17324d;--muted:#60788f;--accent:#2374d8;--accent2:#42a5f5;--good:#198754;--bad:#dc3545;--o2:#4a90e2;--co2:#e86b8a}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,system-ui,sans-serif;background:linear-gradient(135deg,#eaf4ff,#f8fbff);color:var(--ink)}
+button{border:0;border-radius:12px;padding:10px 14px;background:#fff;color:var(--ink);cursor:pointer;box-shadow:0 2px 8px #16324d22;font-weight:700}
+button:hover{transform:translateY(-1px)} button.active{background:var(--accent);color:#fff}
+header{background:#1261b7;color:#fff;padding:16px 22px;display:flex;justify-content:space-between;gap:15px;align-items:center}
+h1{margin:0;font-size:24px}.sub{opacity:.85;font-size:13px;margin-top:3px}
+.top{display:flex;flex-wrap:wrap;gap:7px}.top button{background:#fff;color:#14518f}
+.layout{display:grid;grid-template-columns:1fr 330px;gap:16px;padding:16px;max-width:1500px;margin:auto}
+.stage{background:#0b2034;border-radius:20px;min-height:680px;position:relative;overflow:hidden;box-shadow:0 12px 35px #17324d25}
+.scene{height:100%;min-height:680px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.zoom{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;transition:transform .7s ease}
+svg{width:min(850px,92%);height:620px;overflow:visible}
+.side{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--card);border-radius:16px;padding:15px;box-shadow:0 4px 15px #17324d18}
+.card h2,.card h3{margin:0 0 8px}.card p{line-height:1.45;margin:7px 0}.muted{color:var(--muted)}
+.levels{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.levels button{font-size:12px;padding:8px 5px}
+.controls{display:flex;flex-wrap:wrap;gap:7px}.controls button{flex:1}
+#explain{min-height:130px}.legend{display:flex;gap:12px;font-size:12px;flex-wrap:wrap}.dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px}
+air{fill:#8ed0ff;opacity:.9}.label{font-size:16px;font-weight:700;fill:#eaf6ff}.smalllabel{font-size:12px;fill:#d7eaff}
+.organ{cursor:pointer;transition:.2s}.organ:hover,.organ.selected{filter:brightness(1.35);stroke:#fff;stroke-width:3}
+.lung{fill:#e8929d;stroke:#ffd3d8;stroke-width:3}.bronch{fill:none;stroke:#f3c6c6;stroke-width:12;stroke-linecap:round}.bronch2{fill:none;stroke:#ffd7d7;stroke-width:5;stroke-linecap:round}
+.trachea{fill:#d8a9a9;stroke:#f6dddd;stroke-width:3}.diaph{fill:#cda58d;opacity:.9}
+.cap{fill:none;stroke:#d95873;stroke-width:12;stroke-linecap:round;opacity:.9}.mem{fill:#ffd4a8;opacity:.8}
+.o2{fill:var(--o2)}.co2{fill:var(--co2)}
+.particle{r:6}.hidden{display:none!important}
+.bubble{fill:#eaa0aa;stroke:#ffd9dd;stroke-width:3}.bubble2{fill:none;stroke:#d95873;stroke-width:7;opacity:.85}
+.molecule{font-weight:900;font-size:16px}
+.info{background:#f3f8fd;border-radius:12px;padding:10px;font-size:13px}
+.progress{height:8px;background:#dbe8f5;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:var(--accent);width:14.2%;transition:.4s}
+#phase{font-weight:800}.pill{display:inline-block;padding:4px 8px;border-radius:99px;background:#eaf3ff;color:#1d67b5;font-size:12px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.stage,.scene{min-height:560px}svg{height:500px}.side{order:-1}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>🔬 Анатомическое погружение</h1><div class="sub">Дыхательная система человека • Биология 7 класс</div></div>
+  <div class="top"><button onclick="setLevel(1)">Начать</button><button onclick="resetAll()">↻ Сброс</button></div>
+</header>
+
+<div class="layout">
+<main class="stage">
+ <div class="scene">
+  <div class="zoom" id="zoom">
+   <svg id="svg" viewBox="0 0 900 620" aria-label="Интерактивная схема">
+    <defs>
+      <radialGradient id="lungG"><stop offset="0" stop-color="#f5b0b8"/><stop offset="1" stop-color="#b95f70"/></radialGradient>
+      <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <g id="scene1">
+      <path class="organ" data-name="Носовая полость" d="M410 100 Q450 70 490 100 L475 135 L425 135Z" fill="#d88b96"/>
+      <path class="organ" data-name="Глотка" d="M430 125 L470 125 L470 185 L430 185Z" fill="#c87b88"/>
+      <path class="organ" data-name="Гортань" d="M425 175 L475 175 L485 220 L415 220Z" fill="#d9a0a6"/>
+      <path class="trachea" d="M432 210 Q450 218 468 210 L468 310 Q450 320 432 310Z"/>
+      <g class="organ" data-name="Правое лёгкое"><path class="lung" fill="url(#lungG)" d="M430 285 Q355 260 305 320 Q270 380 290 490 Q320 535 405 505 Q430 480 435 420Z"/></g>
+      <g class="organ" data-name="Левое лёгкое"><path class="lung" fill="url(#lungG)" d="M470 285 Q545 260 595 320 Q630 380 610 490 Q580 535 495 505 Q470 480 465 420Z"/></g>
+      <path class="bronch" d="M450 300 L385 355 M450 300 L515 355"/>
+      <path class="bronch2" d="M385 355 L335 405 M385 355 L370 425 M515 355 L565 405 M515 355 L530 425"/>
+      <path class="diaph" d="M285 505 Q450 570 615 505 Q590 555 450 570 Q310 555 285 505Z"/>
+      <text class="label" x="55" y="65">Нос → глотка → гортань → трахея → бронхи → лёгкие</text>
+      <text class="smalllabel" x="320" y="590">Диафрагма</text>
+    </g>
+
+    <g id="scene2" class="hidden">
+      <path class="lung" fill="url(#lungG)" d="M430 110 Q340 80 250 170 Q205 250 235 460 Q280 535 410 485 Q440 455 445 300Z"/>
+      <path class="lung" fill="url(#lungG)" d="M470 110 Q560 80 650 170 Q695 250 665 460 Q620 535 490 485 Q460 455 455 300Z"/>
+      <path d="M250 280 Q330 300 410 275 M250 360 Q330 375 420 350" stroke="#8f4656" stroke-width="5" fill="none"/>
+      <path d="M650 280 Q570 300 490 275" stroke="#8f4656" stroke-width="5" fill="none"/>
+      <path class="bronch" d="M450 85 L450 230 M450 230 L350 315 M450 230 L550 315"/>
+      <text class="label" x="235" y="575">Правое лёгкое: 3 доли • Левое лёгкое: 2 доли</text>
+      <text class="smalllabel" x="270" y="35">Плевра — оболочка, покрывающая лёгкие и выстилающая грудную полость</text>
+    </g>
+
+    <g id="scene3" class="hidden">
+      <path class="bronch" d="M450 60 L450 200 M450 200 L350 285 M450 200 L550 285 M350 285 L270 350 M350 285 L315 390 M550 285 L630 350 M550 285 L585 390"/>
+      <path class="bronch2" d="M270 350 L220 410 M270 350 L255 450 M315 390 L300 485 M630 350 L680 410 M630 350 L645 450 M585 390 L600 485"/>
+      <text class="label" x="275" y="560">Трахея → главные бронхи → бронхи → бронхиолы</text>
+      <g id="air3"></g>
+    </g>
+
+    <g id="scene4" class="hidden">
+      <path class="bronch2" d="M450 70 C430 150 470 190 430 250 S470 330 430 400"/>
+      <path class="bronch2" d="M450 120 C520 160 505 220 560 270 S525 350 600 410"/>
+      <g stroke="#ffd6d9" stroke-width="4" fill="none">
+       <path d="M430 250 L350 300 M430 250 L500 305 M430 400 L350 455 M560 270 L650 320 M560 270 L620 230"/>
+      </g>
+      <text class="label" x="310" y="555">Бронхиолы ведут к альвеолярным ходам и альвеолам</text>
+      <g id="air4"></g>
+    </g>
+
+    <g id="scene5" class="hidden">
+      <path class="bronch2" d="M450 310 L450 200 L500 145"/>
+      <g id="alveoli5"></g>
+      <text class="label" x="300" y="570">Группа альвеол, окружённых сетью капилляров</text>
+    </g>
+
+    <g id="scene6" class="hidden">
+      <circle class="bubble" cx="450" cy="300" r="145"/>
+      <path class="bubble2" d="M350 215 C430 160 510 185 555 250 C590 310 545 400 470 430 C390 460 325 400 320 330 C315 280 325 240 350 215Z"/>
+      <path class="cap" d="M335 260 C390 190 520 190 565 270 C600 335 520 425 435 420 C350 415 300 335 335 260Z"/>
+      <text class="label" x="410" y="285">АЛЬВЕОЛА</text>
+      <text class="smalllabel" x="600" y="255">Капилляр</text><text class="smalllabel" x="585" y="390">Эритроциты</text>
+      <g id="rbc6"></g><g id="gas6"></g>
+      <text class="smalllabel" x="375" y="475">Тонкая альвеолярно-капиллярная мембрана</text>
+    </g>
+
+    <g id="scene7" class="hidden">
+      <rect x="110" y="120" width="300" height="360" rx="150" fill="#f6b3b7"/>
+      <path class="mem" d="M420 120 Q450 300 420 480 L485 480 Q515 300 485 120Z"/>
+      <rect x="490" y="120" width="300" height="360" rx="130" fill="#f2b2b9"/>
+      <path class="cap" d="M540 170 C650 110 760 180 730 300 C710 410 580 450 530 340 C500 280 505 210 540 170Z"/>
+      <text class="label" x="185" y="315">АЛЬВЕОЛЯРНЫЙ</text><text class="label" x="215" y="345">ВОЗДУХ</text>
+      <text class="label" x="585" y="315">КРОВЬ</text>
+      <text class="smalllabel" x="425" y="95">МЕМБРАНА</text>
+      <g id="gas7"></g><g id="rbc7"></g>
+      <text class="smalllabel" x="180" y="520">O₂ → в кровь</text><text class="smalllabel" x="600" y="520">CO₂ → в альвеолу</text>
+    </g>
+   </svg>
+  </div>
+ </div>
+</main>
+
+<aside class="side">
+ <section class="card">
+  <h2 id="title">Уровень 1</h2>
+  <div class="pill" id="phase">Готово</div>
+  <div class="progress"><i id="prog"></i></div>
+  <p class="muted" id="desc">Общая схема дыхательной системы.</p>
+ </section>
+ <section class="card">
+  <h3>Навигация</h3>
+  <div class="levels" id="levels"></div>
+  <div class="controls" style="margin-top:9px">
+   <button onclick="prev()">← Назад</button><button onclick="next()">Далее →</button>
+  </div>
+ </section>
+ <section class="card">
+  <h3>Управление</h3>
+  <div class="controls">
+   <button onclick="zoomBy(1.15)">🔍 Увеличить</button>
+   <button onclick="zoomBy(.87)">🔎 Уменьшить</button>
+  </div>
+  <div class="controls" style="margin-top:7px">
+   <button onclick="startProcess()">▶ Запустить</button>
+   <button onclick="pauseProcess()">⏸ Пауза</button>
+  </div>
+  <div class="controls" style="margin-top:7px">
+   <button onclick="resetAll()">↻ Сброс</button>
+   <button onclick="showExplanation()">Что здесь происходит?</button>
+  </div>
+ </section>
+ <section class="card" id="explain">
+  <h3>Объяснение</h3><p>Выберите уровень и запустите процесс.</p>
+ </section>
+ <section class="card">
+  <h3>Газообмен</h3>
+  <div class="legend"><span><i class="dot" style="background:var(--o2)"></i>O₂</span><span><i class="dot" style="background:var(--co2)"></i>CO₂</span></div>
+  <p class="muted">O₂ диффундирует из альвеолы в кровь, CO₂ — из крови в альвеолу. Эритроциты мембрану не пересекают.</p>
+ </section>
+</aside>
+</div>
+
+<script>
+const titles=[
+"Дыхательная система","Лёгкие","Бронхиальное дерево","Бронхиолы",
+"Альвеолы","Одна альвеола","Газообмен"
+];
+const desc=[
+"Путь воздуха от носовой полости до лёгких и диафрагма.",
+"Парные органы дыхания: правое лёгкое имеет 3 доли, левое — 2.",
+"Трахея разделяется на главные бронхи, которые ветвятся дальше.",
+"Бронхиолы — мелкие воздухоносные пути, ведущие к альвеолярным структурам.",
+"Альвеолы — воздушные пузырьки, окружённые сетью капилляров.",
+"Увеличенная альвеола и капилляр: здесь создаются условия для диффузии газов.",
+"Кислород проходит из альвеолярного воздуха в кровь, CO₂ — обратно в альвеолу."
+];
+const explanations=[
+"Воздух проходит через носовую полость, глотку, гортань, трахею, бронхи, бронхиолы и достигает альвеол.",
+"Лёгкие находятся в грудной полости. Правое лёгкое разделено на три доли, левое — на две. Плевра уменьшает трение при дыхательных движениях.",
+"Трахея делится на правый и левый главные бронхи. Они многократно ветвятся, образуя бронхиальное дерево.",
+"Бронхиолы являются частью воздухоносных путей. Они продолжаются в области альвеолярных ходов и альвеол.",
+"Каждая альвеола имеет тонкую стенку и окружена капиллярами. Большая площадь поверхности помогает газообмену.",
+"Кислород и углекислый газ проходят через тонкую альвеолярно-капиллярную мембрану. Эритроциты остаются внутри сосудов.",
+"Во время газообмена O₂ диффундирует из альвеолярного воздуха в кровь, а CO₂ — из крови в альвеолу. Затем CO₂ удаляется при выдохе."
+];
+let level=1, zoom=1, timer=null, running=false;
+const levels=document.getElementById('levels');
+titles.forEach((t,i)=>{let b=document.createElement('button');b.textContent=i+1;b.title=t;b.onclick=()=>setLevel(i+1);levels.appendChild(b)});
+function setLevel(n){
+ level=Math.max(1,Math.min(7,n));
+ document.querySelectorAll('[id^="scene"]').forEach(x=>x.classList.add('hidden'));
+ document.getElementById('scene'+level).classList.remove('hidden');
+ document.getElementById('title').textContent='Уровень '+level+' — '+titles[level-1];
+ document.getElementById('desc').textContent=desc[level-1];
+ document.getElementById('prog').style.width=(level/7*100)+'%';
+ [...levels.children].forEach((b,i)=>b.classList.toggle('active',i===level-1));
+ document.getElementById('explain').innerHTML='<h3>Объяснение</h3><p>'+explanations[level-1]+'</p>';
+ document.getElementById('phase').textContent=level===7?'Газообмен':'Изучение';
+ zoom=1; applyZoom();
+ stopParticles();
+ if(level===3) buildAir('air3',7);
+ if(level===4) buildAir('air4',7);
+ if(level===5) buildAlveoli();
+ if(level===6) buildRBC('rbc6',8), buildGas('gas6',12);
+ if(level===7) buildRBC('rbc7',8), buildGas7();
+}
+function next(){setLevel(level+1)} function prev(){setLevel(level-1)}
+function zoomBy(f){zoom=Math.max(.7,Math.min(2.2,zoom*f));applyZoom()}
+function applyZoom(){document.getElementById('zoom').style.transform=`scale(${zoom})`}
+function showExplanation(){document.getElementById('explain').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function resetAll(){stopParticles();zoom=1;applyZoom();setLevel(1)}
+function stopParticles(){if(timer){clearInterval(timer);timer=null}running=false;document.getElementById('phase').textContent='Готово'}
+function startProcess(){
+ if(running)return; running=true;
+ document.getElementById('phase').textContent=level===7?'Диффузия O₂ и CO₂':'Вдох: воздух движется внутрь';
+ const group=level===3?'air3':level===4?'air4':null;
+ if(group){
+   const els=[...document.getElementById(group).children];
+   let k=0; timer=setInterval(()=>{els.forEach((e,i)=>e.setAttribute('opacity',i===k%els.length?1:.35));k++},220);
+ } else if(level===6){animateGas6()} else if(level===7){animateGas7()}
+}
+function pauseProcess(){if(timer){clearInterval(timer);timer=null}running=false;document.getElementById('phase').textContent='Пауза'}
+function buildAir(id,n){
+ const g=document.getElementById(id);g.innerHTML='';
+ for(let i=0;i<n;i++){let c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('class','particle');c.setAttribute('cx',300+i*50);c.setAttribute('cy',120+(i%3)*120);c.setAttribute('r',6);c.setAttribute('fill','#8ed0ff');g.appendChild(c)}
+}
+function buildAlveoli(){
+ const g=document.getElementById('alveoli5');g.innerHTML='';
+ const pts=[[300,210],[370,160],[450,145],[530,170],[600,220],[330,300],[410,285],[500,290],[570,315],[370,380],[460,390],[540,385]];
+ pts.forEach(([x,y],i)=>{
+  let c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('class','bubble');c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r',48);g.appendChild(c);
+  let p=document.createElementNS('http://www.w3.org/2000/svg','circle');p.setAttribute('class','bubble2');p.setAttribute('cx',x);p.setAttribute('cy',y);p.setAttribute('r',56);g.appendChild(p);
+ });
+}
+function buildRBC(id,n){
+ const g=document.getElementById(id);g.innerHTML='';
+ for(let i=0;i<n;i++){let e=document.createElementNS('http://www.w3.org/2000/svg','ellipse');e.setAttribute('cx',520+(i%4)*25);e.setAttribute('cy',240+Math.floor(i/4)*55);e.setAttribute('rx',11);e.setAttribute('ry',7);e.setAttribute('fill','#b94058');g.appendChild(e)}
+}
+function buildGas(id,n){
+ const g=document.getElementById(id);g.innerHTML='';
+ for(let i=0;i<n;i++){
+  let c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('class','o2');c.setAttribute('cx',370+(i%4)*24);c.setAttribute('cy',245+Math.floor(i/4)*35);c.setAttribute('r',5);g.appendChild(c);
+ }
+}
+function animateGas6(){
+ const g=document.getElementById('gas6');let i=0; if(timer)clearInterval(timer);
+ timer=setInterval(()=>{let c=g.children[i%g.children.length];c.setAttribute('cx',430+(i%6)*18);c.setAttribute('cy',260+(i%5)*22);i++},250)
+}
+function buildGas7(){
+ const g=document.getElementById('gas7');g.innerHTML='';
+ for(let i=0;i<8;i++){
+  let o=document.createElementNS('http://www.w3.org/2000/svg','circle');o.setAttribute('class','o2');o.setAttribute('cx',180+(i%4)*55);o.setAttribute('cy',180+Math.floor(i/4)*180);o.setAttribute('r',7);o.dataset.i=i;g.appendChild(o);
+  let c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('class','co2');c.setAttribute('cx',690+(i%4)*20);c.setAttribute('cy',190+Math.floor(i/4)*160);c.setAttribute('r',7);g.appendChild(c);
+ }
+}
+function animateGas7(){
+ buildGas7();let i=0; if(timer)clearInterval(timer);
+ const g=document.getElementById('gas7');const o=[...g.querySelectorAll('.o2')],c=[...g.querySelectorAll('.co2')];
+ timer=setInterval(()=>{
+  o.forEach((e,j)=>{let t=(j+i)%12;e.setAttribute('cx',180+t*25);});
+  c.forEach((e,j)=>{let t=(j+i)%12;e.setAttribute('cx',700-t*25);});
+  i++; 
+ },180);
+}
+document.querySelectorAll('.organ').forEach(e=>e.addEventListener('click',()=>{
+ document.querySelectorAll('.organ').forEach(x=>x.classList.remove('selected'));e.classList.add('selected');
+ document.getElementById('explain').innerHTML='<h3>'+e.dataset.name+'</h3><p>Вы выбрали структуру дыхательной системы. Нажмите «Далее» или выберите другой уровень для продолжения анатомического погружения.</p>';
+}));
+setLevel(1);
+</script>
+</body>
+</html>
